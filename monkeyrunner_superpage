@@ -1,0 +1,117 @@
+from com.android.monkeyrunner import MonkeyRunner, MonkeyDevice, MonkeyDevice
+from com.android.monkeyrunner.easy import EasyMonkeyDevice, By
+import os
+import re
+device = MonkeyRunner.waitForConnection()
+easy_device = EasyMonkeyDevice(device)
+
+# install apk
+#device.removePackage("com.galaxy.abstract")
+#device.installPackage("D:\com.galaxy.abstract.apk")
+
+#start activity
+device.startActivity(component= "com.peak.pattern/com.peak.activity.MainActivity")
+
+'''
+#current Activity
+def getFocusedPackageAndActivity():
+    patten = re.compile(r"[a-zA-Z0-9\.] + /[a-zA-Z0-9\.]+")
+    out = os.popen("adb shell dumpsys window windows | findstr \/| findstr name=").read()
+    list=pattern.findall(out)
+    component = list[0]
+
+    return component
+'''
+
+#close ads activity
+viewer_home = easy_device.getHierarchyViewer()
+activity = viewer_home.getFocusedWindowName()
+while activity != "com.peak.pattern/com.peak.activity.MainActivity":
+	device.press('KEYCODE_BACK')
+
+#wallpaperlist
+easy_device.touch(By.id('id/iv_home'),MonkeyDevice.DOWN_AND_UP)
+MonkeyRunner.sleep(2)
+
+#download & setting
+device.touch(520,800,'DOWN_AND_UP')
+MonkeyRunner.sleep(2)
+
+viewer_detail = easy_device.getHierarchyViewer()
+MonkeyRunner.sleep(2)
+button = viewer_detail.findViewById('id/btn_footer')
+text = viewer_detail.getText(button)
+MonkeyRunner.sleep(2)
+while text != 'SET':
+	easy_device.touch(By.id('id/btn_footer'),MonkeyDevice.DOWN_AND_UP)
+	MonkeyRunner.sleep(2)
+	
+easy_device.touch(By.id('id/btn_footer'),MonkeyDevice.DOWN_AND_UP)
+MonkeyRunner.sleep(2)
+easy_device.touch(By.id('id/rb_wp_settings_fixed'),MonkeyDevice.DOWN_AND_UP)
+MonkeyRunner.sleep(2)
+easy_device.touch(By.id('id/btn_footer'),MonkeyDevice.DOWN_AND_UP)
+MonkeyRunner.sleep(20)
+
+'''
+viewer_setting = easy_device.getHierarchyViewer()
+activity_setting = viewer_setting.getFocusedWindowName()
+while activity_setting != "com.pea.pattern/com.peak.activity.RecommendedActivity":
+	device.press('KEYCODE_BACK')
+
+	
+MonkeyRunner.sleep(2)
+
+#back to wallpaperlist
+device.press('KEYCODE_BACK')
+MonkeyRunner.sleep(2)
+'''
+
+device.startActivity(component= "com.peak.pattern/com.peak.activity.WallpaperListActivity")
+#download all
+easy_device.touch(By.id('id/ib_download'),MonkeyDevice.DOWN_AND_UP)
+MonkeyRunner.sleep(2)
+
+viewer_download = easy_device.getHierarchyViewer()
+view_d = viewer_download.findViewById('id/fl_dialog_content')
+if view_d:
+	device.press('KEYCODE_BACK',MonkeyDevice.DOWN_AND_UP)
+	MonkeyRunner.sleep(2)
+else:
+	easy_device.touch(By.id('id/tv_dialog_right_btn'),MonkeyDevice.DOWN_AND_UP)
+	MonkeyRunner.sleep(2)
+	
+#change wallpaper	
+easy_device.touch(By.id('id/ib_change'),MonkeyDevice.DOWN_AND_UP)
+MonkeyRunner.sleep(2)
+
+viewer_change = easy_device.getHierarchyViewer()
+activity_change = viewer_change.getFocusedWindowName()
+if activity != "com.peak.pattern/com.peak.activity.WallpaperListActivity":
+	easy_device.touch(By.id('id/tv_dialog_right_btn'),MonkeyDevice.DOWN_AND_UP)
+	device.press('KEYCODE_BACK',MonkeyDevice.DOWN_AND_UP)
+else:
+	easy_device.touch(By.id('id/tv_dialog_left_btn'),MonkeyDevice.DOWN_AND_UP)
+MonkeyRunner.sleep(4)
+
+
+#ads
+easy_device.touch(By.id('id/ib_shuffle'),MonkeyDevice.DOWN_AND_UP)
+MonkeyRunner.sleep(30)
+device.press('KEYCODE_BACK',MonkeyDevice.DOWN_AND_UP)
+
+#back to homepage
+device.press('KEYCODE_BACK',MonkeyDevice.DOWN_AND_UP)
+
+'''
+#album list
+easy_device.touch(By.id('id/btn_more_albums'),MonkeyDevice.DOWN_AND_UP)
+MonkeyRunner.sleep(2)
+
+device.press('KEYCODE_BACK',MonkeyDevice.DOWN_AND_UP)
+'''
+
+#quit
+device.press('KEYCODE_BACK',MonkeyDevice.DOWN_AND_UP)
+device.press('KEYCODE_BACK',MonkeyDevice.DOWN_AND_UP)
+device.press('KEYCODE_BACK',MonkeyDevice.DOWN_AND_UP)
